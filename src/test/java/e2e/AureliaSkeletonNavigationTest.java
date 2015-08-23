@@ -13,7 +13,7 @@ import org.testng.annotations.*;
 import java.net.URL;
 
 
-public class AureliaSkeletionNavigationTest {
+public class AureliaSkeletonNavigationTest {
     private WebDriver driver;
 
     WebDriverWait wait;
@@ -39,7 +39,7 @@ public class AureliaSkeletionNavigationTest {
         waitUntilLoadingDivDisappears();
 
         String title = driver.getTitle();
-        Assert.assertEquals(title, "Aurelia");
+        Assert.assertEquals(title, "Welcome | Aurelia");
     }
 
     private void waitUntilLoadingDivDisappears() {
