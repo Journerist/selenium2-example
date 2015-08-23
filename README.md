@@ -6,10 +6,10 @@
 
 - Basic Selenium 2 setup with TestNG 
 - Wait for ExpectedConditions
+- Parallel browser execution
  
 # TODOs
 
-- Multiple synchronous browser executions
 - JavaScript wait for conditions 
 - Benchmark invoke SPA actions: Native vs. JavaScript
 - Create a custom framework related layer for QA friendly requirement definitions

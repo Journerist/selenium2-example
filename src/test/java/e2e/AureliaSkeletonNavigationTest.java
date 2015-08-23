@@ -19,12 +19,15 @@ public class AureliaSkeletonNavigationTest {
     WebDriverWait wait;
 
     @BeforeClass
-    public void setUp() throws Exception {
-        DesiredCapabilities capabilities = DesiredCapabilities.firefox();
-        capabilities.setBrowserName("firefox");
+    @Parameters ({"browser"})
+    public void setUp(String browser) throws Exception {
+        DesiredCapabilities capabilities;
 
-        DesiredCapabilities capabilitiesChrome = DesiredCapabilities.chrome();
-        capabilitiesChrome.setBrowserName("chrome");
+        if (browser.equals("firefox")) {
+            capabilities = DesiredCapabilities.firefox();
+        } else {
+            capabilities = DesiredCapabilities.chrome();
+        }
 
         driver = new RemoteWebDriver(
                 new URL("http://localhost:4444/wd/hub"),capabilities);
