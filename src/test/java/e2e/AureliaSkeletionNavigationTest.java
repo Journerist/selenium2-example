@@ -34,7 +34,7 @@ public class AureliaSkeletionNavigationTest {
 
     @Test
     public void testSimple() throws Exception {
-        driver.get("http://192.168.117.1:9000");
+        driver.get("http://localhost:9000");
 
         waitUntilLoadingDivDisappears();
 
