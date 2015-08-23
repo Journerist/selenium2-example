@@ -1,80 +1,34 @@
 package e2e;
 
-import com.google.common.base.Predicate;
-import org.openqa.selenium.*;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import selenium.ParallelSeleniumTest;
+import selenium.utils.SeleniumAureliaAccessor;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
-import java.net.URL;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
+public class AureliaSkeletonNavigationTest extends ParallelSeleniumTest {
 
-public class AureliaSkeletonNavigationTest {
-    private WebDriver driver;
-
-    WebDriverWait wait;
+    private SeleniumAureliaAccessor aurelia;
 
     @BeforeClass
-    @Parameters ({"browser"})
-    public void setUp(String browser) throws Exception {
-        DesiredCapabilities capabilities;
-
-        if (browser.equals("firefox")) {
-            capabilities = DesiredCapabilities.firefox();
-        } else {
-            capabilities = DesiredCapabilities.chrome();
-        }
-
-        driver = new RemoteWebDriver(
-                new URL("http://localhost:4444/wd/hub"),capabilities);
-
-        wait = new WebDriverWait(driver, 20);
+    public void setup() throws Exception {
+        aurelia = new SeleniumAureliaAccessor(driver, wait);
     }
 
-    @Test
+    @Test(priority = 0)
     public void waitUntilAureliaIsCompletelyLoaded_nativeWait() throws Exception {
         driver.get("http://localhost:9000");
-        waitUntilLoadingDivDisappears();
+        aurelia.waitUntilAureliaLoaded();
+        aurelia.waitUntilLoadingDivDisappears();
 
-        String title = driver.getTitle();
-        Assert.assertEquals(title, "Welcome | Aurelia");
+        Assert.assertEquals(driver.getTitle(), "Welcome | Aurelia");
     }
 
-    @Test(dependsOnMethods="waitUntilAureliaIsCompletelyLoaded_nativeWait")
+    @Test(priority = 1)
     public void waitUntilAnotherPageIsCompletelyLoaded_javaScriptWait() throws Exception {
         clickLinkByHref("#/child-router");
-        wait.until( new Predicate<WebDriver>() {
-                        public boolean apply(WebDriver driver) {
-                            return ((JavascriptExecutor)driver).executeScript("return document.getElementsByClassName('au-enter').length + \"\";").equals("0");
-                        }
-                    }
-        );
-        Assert.assertEquals(((JavascriptExecutor)driver).executeScript("return document.getElementsByClassName('au-enter').length"), 0L);
-    }
-
-    private void clickLinkByHref(String href) {
-        List<WebElement> anchors = driver.findElements(By.tagName("a"));
-        Iterator<WebElement> i = anchors.iterator();
-
-        while(i.hasNext()) {
-            WebElement anchor = i.next();
-            if(anchor.getAttribute("href").contains(href)) {
-                anchor.click();
-                break;
-            }
-        }
-    }
-
-    private void waitUntilLoadingDivDisappears() {
-        wait.until(
-                ExpectedConditions.not(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.className("splash"))));
+        waitUntilScriptResult("return document.getElementsByClassName('au-enter').length + '';", "0");
+        Assert.assertEquals(getScriptResult("return document.getElementsByClassName('au-enter').length"), 0L);
     }
 
     @AfterClass

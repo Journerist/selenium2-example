@@ -12,7 +12,5 @@
  
 # TODOs
 
- 
-- Benchmark invoke SPA actions: Native vs. JavaScript
 - Create a custom framework related layer for QA friendly requirement definitions
 
